@@ -3,8 +3,6 @@ package br.com.feed.service;
 import br.com.feed.model.Feed;
 import br.com.feed.model.RSS;
 import br.com.feed.utils.CrawlerUtils;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,8 +11,6 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 
 @Service
 public class FeedService {
@@ -22,22 +18,25 @@ public class FeedService {
 	@Value("${feed.url}")
 	private String url;
 	
-	public Feed getFeed() throws JsonParseException, JsonMappingException, IOException{
+	public Feed getFeed() throws IOException{
 		
-	    String xml = getURLContent(url);
-	    ObjectMapper objectMapper = new XmlMapper();
-	    RSS employees = objectMapper.readValue(xml,RSS.class);
+	    RSS rss = readXml();
 	    Feed f = new Feed();	    
-	    f.setItem(employees.getChannel().getItem());
+	    f.setItem(rss.getChannel().getItem());
 	    CrawlerUtils.setContent(f);
 	    
 		return f;
 	}
+
+	private RSS readXml() throws IOException {
+		String xml = getURLContent(url);
+	    ObjectMapper objectMapper = new XmlMapper();
+	    RSS rss = objectMapper.readValue(xml,RSS.class);
+		return rss;
+	}
 	
-	public static String getURLContent(String p_sURL)
+	public String getURLContent(String p_sURL)
 	{
-	    URL oURL;
-	    URLConnection oConnection;
 	    BufferedReader oReader;
 	    String sLine;
 	    StringBuilder sbResponse;
@@ -45,9 +44,7 @@ public class FeedService {
 
 	    try
 	    {
-	        oURL = new URL(p_sURL);
-	        oConnection = oURL.openConnection();
-	        oReader = new BufferedReader(new InputStreamReader(oConnection.getInputStream()));
+	        oReader = new BufferedReader(new InputStreamReader(new URLWrapper(p_sURL).openConnection().getInputStream()));
 	        sbResponse = new StringBuilder();
 
 	        while((sLine = oReader.readLine()) != null)
@@ -63,5 +60,13 @@ public class FeedService {
 	    }
 
 	    return sResponse;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 }

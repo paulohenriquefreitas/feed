@@ -7,7 +7,6 @@ import javax.xml.bind.JAXBException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,11 +32,11 @@ public class FeedController {
 		try {
 			feed = feedService.getFeed();
 		} catch (JsonParseException e) {
-			new ResponseEntity<JsonParseException>(e, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<JsonParseException>(e, HttpStatus.BAD_REQUEST);
 		} catch (JsonMappingException e) {
-			new ResponseEntity<JsonMappingException>(e, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<JsonMappingException>(e, HttpStatus.BAD_REQUEST);
 		} catch (IOException e) {
-			new ResponseEntity<IOException>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<IOException>(e, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		return new ResponseEntity<Feed>(feed, HttpStatus.OK) ;		
