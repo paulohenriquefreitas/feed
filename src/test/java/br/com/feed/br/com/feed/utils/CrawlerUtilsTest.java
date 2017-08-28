@@ -1,18 +1,18 @@
 package br.com.feed.br.com.feed.utils;
 
-import br.com.feed.model.Feed;
-import br.com.feed.model.Item;
-import br.com.feed.utils.CrawlerUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.springframework.http.HttpStatus.OK;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import br.com.feed.model.Feed;
+import br.com.feed.model.Item;
+import br.com.feed.utils.CrawlerUtils;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CrawlerUtilsTest {
